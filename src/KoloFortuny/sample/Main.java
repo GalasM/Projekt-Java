@@ -21,7 +21,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-       newGame = new Game("Ala ma kota");
+       newGame = new Game("bo chodzi o to żeby nie wpaść w błoto");
 
         launch(args);
     }
