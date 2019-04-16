@@ -15,8 +15,6 @@ public class Field extends Label{
 
     public Field(char fromString) {
             super();
-           // this.minWidth(width);
-           // this.minHeight(heigth);
             sign = fromString;
             this.setPadding(new Insets(5,5,5,5));
             this.setMinSize(width,heigth);
