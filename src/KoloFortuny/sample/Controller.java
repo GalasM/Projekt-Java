@@ -15,12 +15,11 @@ public class Controller {
     public FlowPane Gpane;
 
     @FXML
-    public void click(Event event) {
+    public void click(Event event) {        //KLIKANIE LITER
         int len = newGame.getWordLength();
         int countSigns = 0;
         Button x = (Button) event.getSource();
         x.setDisable(true);
-
         for (int i = 0; i < len; i++) {
             char ClickedSign;
             String ClickedSignStr = (x.getId()).toUpperCase();
@@ -31,16 +30,13 @@ public class Controller {
                 newGame.setHiddenWord(i, ClickedSign);
                 newGame.labels.get(i).setText(ClickedSignStr);
             }
-
         }
-
         System.out.println(newGame.getHiddenWord());
         System.out.println("Ile liter trafiono " + countSigns);
-
     }
 
     @FXML
-    private void addL(Event event) throws IOException {
+    private void addL(Event event) throws IOException {     //KLIKNIECIE START
         FXMLLoader loader = new FXMLLoader();
         Parent rootNode = null;
         rootNode = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -48,11 +44,7 @@ public class Controller {
         Gpane.setAlignment(Pos.CENTER);
         Gpane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2))));
         for (int i = 0; i < newGame.getWordsCounter()+1; i++) {
-
-
             Gpane.getChildren().add(newGame.words.get(i));
         }
-        System.out.println("wc: "+newGame.getWordsCounter());
-
     }
 }

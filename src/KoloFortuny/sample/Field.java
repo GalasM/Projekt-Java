@@ -24,9 +24,9 @@ public class Field extends Label{
             this.setFont(new Font("Verdana",25));
             if(!(fromString=='_')) {
                 this.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2))));
-                this.setText("  ");
+                }
             }
-        }
+
 
 
     public void GetSign()
