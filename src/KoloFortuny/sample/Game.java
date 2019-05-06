@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Game {
+class Game {
     private String word;
     private StringBuilder hiddenWord;
     private int wordLength;
@@ -20,7 +20,7 @@ public class Game {
         addLabels();
     }
 
-    public void hideWord() {
+    private void hideWord() {
         hiddenWord = new StringBuilder(word);
         for (int i = 0; i < wordLength; i++)
             if (word.charAt(i) == ' ')
@@ -46,7 +46,7 @@ public class Game {
         return wordLength;
     }
 
-    void addLabels() {
+    private void addLabels() {
         words.add(new FlowPane(Orientation.VERTICAL,2,2));
         words.get(wordsCounter).setPrefWrapLength(100);
         words.get(wordsCounter).setMaxSize(800,50);

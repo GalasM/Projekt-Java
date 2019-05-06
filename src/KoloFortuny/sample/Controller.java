@@ -1,13 +1,11 @@
 package KoloFortuny.sample;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import java.io.IOException;
+
 
 import static KoloFortuny.sample.Main.newGame;
 public class Controller {
@@ -36,11 +34,7 @@ public class Controller {
     }
 
     @FXML
-    private void addL(Event event) throws IOException {     //KLIKNIECIE START
-        FXMLLoader loader = new FXMLLoader();
-        Parent rootNode = null;
-        rootNode = FXMLLoader.load(getClass().getResource("sample.fxml"));
-
+    private void addL() {     //KLIKNIECIE START
         Gpane.setAlignment(Pos.CENTER);
         Gpane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2))));
         for (int i = 0; i < newGame.getWordsCounter()+1; i++) {

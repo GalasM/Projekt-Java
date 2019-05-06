@@ -8,18 +8,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 
-public class Field extends Label{
-    private char sign=' ';
-    private int width=50;
-    private int heigth=50;
+class Field extends Label{
 
-    public Field(char fromString) {
+    Field(char fromString) {
             super();
-            sign = fromString;
             this.setPadding(new Insets(5,5,5,5));
-            this.setMinSize(width,heigth);
+        int width = 50;
+        int heigth = 50;
+        this.setMinSize(width, heigth);
             this.setAlignment(Pos.CENTER);
-            this.setFont(new Font("Verdana",25));
+            this.setFont(new Font("Arial",25));
             if(!(fromString=='_')) {
                 this.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2))));
                 }
@@ -27,12 +25,12 @@ public class Field extends Label{
 
 
 
-    public void GetSign()
+   /* public void GetSign()
     {
         System.out.println(sign);
     }
     public void SetSign(char si)
     {
         sign=si;
-    }
+    }*/
 }
