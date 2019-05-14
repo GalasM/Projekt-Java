@@ -59,5 +59,5 @@
                 <Button id="a" focusTraversable="false" mnemonicParsing="false" onAction="#click" pickOnBounds="false" prefHeight="30.0" prefWidth="30.0" text="A" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                 <Button id="ź" focusTraversable="false" mnemonicParsing="false" onAction="#click" pickOnBounds="false" prefHeight="30.0" prefWidth="30.0" text="Ź" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
             </GridPane>
-            <Button id="start" layoutX="50" layoutY="50" mnemonicParsing="false" onAction="#addL" prefHeight="30.0" prefWidth="100.0" text="START" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button fx:id="Buttonstart" layoutX="50" layoutY="50" mnemonicParsing="false" onAction="#addL" prefHeight="30.0" prefWidth="100.0" text="START" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
         </AnchorPane>

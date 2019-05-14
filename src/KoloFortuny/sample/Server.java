@@ -2,15 +2,156 @@ package KoloFortuny.sample;
 
 import java.io.*;
 import java.net.*;
-public class Server{
-    ServerSocket providerSocket;
-    Socket connection = null;
-    ObjectOutputStream out;
-    ObjectInputStream in;
-    int i;
-    int message;
-    Server(){}
-    void run()
+import java.util.Random;
+
+
+public class Server {
+   private static String[][] hasla = {{"Ala ma", "Powiedzenia"}, {"Krol Karol kupil krolowej Karolinie korale koloru koralowego", "aaa"}, {"Stol z powylamywanymi nogami", "bbb"}};
+   private static final int generatedNumber = randomValue();
+   private static String password;
+   private static String passwordCompleted;
+   private static String category;
+
+    // Socket connection = null;
+    //  ServerSocket providerSocket;
+    //  ObjectOutputStream out;
+    //  ObjectInputStream in;
+    //  Messages message;
+
+    private static final int PORT=2004;
+
+    private static int randomValue()
+    {
+        Random generator = new Random();
+        return generator.nextInt(3);   //ilosc hasel i kategorii
+    }
+
+
+
+    public static void main(String[] args) throws Exception {
+        ServerSocket listener = new ServerSocket(PORT);
+
+        try {
+            System.out.println("Server ON");
+            while (true) {
+                new Handler(listener.accept()).start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            listener.close();
+        }
+    }
+
+    private static class Handler extends Thread {
+        private Socket socket;
+        private ObjectInputStream in;
+        private OutputStream os;
+        private ObjectOutputStream out;
+        private InputStream is;
+
+        public Handler(Socket socket) throws IOException {
+            this.socket = socket;
+        }
+
+        public void run(){
+
+            try{
+                is = socket.getInputStream();
+                in = new ObjectInputStream(is);
+                os = socket.getOutputStream();
+                out = new ObjectOutputStream(os);
+                System.out.println("Server ON");
+                Messages firstMessage = (Messages) in.readObject();
+                System.out.println(firstMessage.getMsg());
+                sendNotification(firstMessage);
+
+                while(socket.isConnected())
+                {
+                    Messages inputmsg = (Messages) in.readObject();
+                    if (inputmsg != null) {
+                        switch (inputmsg.getType()) {
+                            case PASSWORD:
+                                sendMessage(inputmsg);
+                                break;
+                            case CATEGORY:
+                                sendMessage(inputmsg);
+                                break;
+                            case START:
+                                Messages StartWord = new Messages();
+                                Messages StartCategory = new Messages();
+
+                                StartWord.setType(MessageType.PASSWORD);
+                                password=randomWord();
+                                StartWord.setMsg(password);
+                                System.out.println(StartWord.getMsg());
+                                category=randomCategory();
+                                StartCategory.setMsg(category);
+                                StartCategory.setType(MessageType.CATEGORY);
+                                sendMessage(StartWord);
+                                sendMessage(StartCategory);
+                              //  newGame = new Game(randomWord());
+
+                                break;
+                            case NOTIFICATION:
+                                sendMessage(inputmsg);
+                        }
+                    }
+                }
+            } catch (SocketException socketException) {
+
+
+            } catch (Exception e){
+
+            } finally {
+                try {
+                    in.close();
+                    out.close();
+                    socket.close();
+                }catch (IOException e)
+                {
+
+                }
+
+            }
+
+            }
+
+
+        void sendMessage(Messages msg)
+        {
+            try{
+                out.writeObject(msg);
+                out.flush();
+               // System.out.println("server>" + msg.getMsg());
+            }
+            catch(IOException ioException){
+                ioException.printStackTrace();
+            }
+        }
+
+        private void sendNotification(Messages firstMessage) throws IOException {
+            Messages msg = new Messages();
+            msg.setMsg(firstMessage.getMsg());
+            msg.setType(firstMessage.getType());
+            sendMessage(msg);
+        }
+
+
+        String randomWord()
+        {
+            return hasla[generatedNumber][0];
+        }
+
+        String randomCategory()
+        {
+            return hasla[generatedNumber][1];
+        }
+
+    }
+
+}
+    /*void run()
     {
         try{
             //1. creating a server socket
@@ -27,22 +168,20 @@ public class Server{
             //4. The two parts communicate via the input and output streams
             do{
                 try{
-                    message = (Integer)in.readObject();
-                   // System.out.println("client>" + message.getVim());
-                    i++;
-                    sendMessage(i);
-                    message=message+1;
-                  /*  int x =message;
-                    x++;
-                    message=x;
-                    //Object.parseInt(message);
-                    if (message!=4)
-                        sendMessage(message);*/
+                    message = (Messages)in.readObject();
+                   if(message.getType()== MessageType.START) {
+                        message.setType(MessageType.PASSWORD);
+                        message.setMsg(randomWord());
+                        sendMessage(message);
+                        message.setType(MessageType.CATEGORY);
+                        message.setMsg(randomCategory());
+                        sendMessage(message);
+                    }
                 }
                 catch(ClassNotFoundException classnot){
                     System.err.println("Data received in unknown format");
                 }
-            }while(i!=1);
+            }while(in.available()!=0);
         }
         catch(IOException ioException){
             ioException.printStackTrace();
@@ -58,8 +197,19 @@ public class Server{
                 ioException.printStackTrace();
             }
         }
+    }*/
+   /* void sendMessage(Messages msg)
+    {
+        try{
+            out.writeObject(msg.getMsg());
+            out.flush();
+            System.out.println("server>" + msg.getMsg());
+        }
+        catch(IOException ioException){
+            ioException.printStackTrace();
+        }
     }
-    void sendMessage(int msg)
+    void sendMessage(String msg)
     {
         try{
             out.writeObject(msg);
@@ -70,4 +220,80 @@ public class Server{
             ioException.printStackTrace();
         }
     }
-}
+
+    int randomValue()
+    {
+        Random generator = new Random();
+        return generator.nextInt(3);   //ilosc hasel i kategorii
+    }
+
+    String randomWord()
+    {
+        return hasla[generatedNumber][0];
+    }
+
+    String randomCategory()
+    {
+        return hasla[generatedNumber][1];
+    }
+
+   private static class Handler extends Thread
+    {
+        Socket client;
+        ObjectOutputStream out;
+        ObjectInputStream in;
+        Socket connection = null;
+        Messages message;
+        public Handler(Socket client)
+        {
+            this.client=client;
+        }
+        public void run()
+        {
+            try {
+                out = new ObjectOutputStream(connection.getOutputStream());
+                out.flush();
+                in = new ObjectInputStream(connection.getInputStream());
+                message=(Messages) in.readObject();
+                sendMessage(message);
+                while (client.isConnected())
+                {
+                    Messages inputmsg = (Messages) in.readObject();
+
+                }
+            }catch(IOException e)
+            {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } finally{
+                //4: Closing connection
+                try{
+                    in.close();
+                    out.close();
+                    providerSocket.close();
+                }
+                catch(IOException ioException){
+                    ioException.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void main(String args[]) throws Exception
+    {
+        ServerSocket listener = new ServerSocket(2004);
+        //Server server = new Server();
+        //server.run();
+        try{
+        while(true)
+        {
+            new Handler(listener.accept()).start();
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            listener.close();
+        }
+    }
+}*/

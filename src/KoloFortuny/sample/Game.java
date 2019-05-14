@@ -5,7 +5,6 @@ import javafx.scene.layout.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 class Game {
     private String word;
     private StringBuilder hiddenWord;
@@ -14,6 +13,7 @@ class Game {
     List<FlowPane> words = new ArrayList<>();
     private int wordsCounter=0;
     Game(String entry) {
+
         word = entry.toUpperCase();
         wordLength = word.length();
         hideWord();

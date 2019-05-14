@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
    static Game newGame;
+   static Client newClient;
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -19,8 +20,9 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-
-       newGame = new Game("Król Karol kupił królowej Karolinie korale koloru koralowego");
-        launch(args);
+       // newGame = new Game("Król Karol kupił królowej Karolinie korale koloru koralowego");
+       // newClient = new Client();
+        //newClient.run();
+            launch(args);
     }
 }

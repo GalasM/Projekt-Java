@@ -4,37 +4,93 @@ package KoloFortuny.sample;
 
 import java.io.*;
 import java.net.*;
-public class Client{
-    Socket requestSocket;
-    ObjectOutputStream out;
-    ObjectInputStream in;
-    int message;
-    Client(){}
-    void run()
+
+import static KoloFortuny.sample.Main.newGame;
+import static KoloFortuny.sample.MessageType.CONNECTED;
+import static KoloFortuny.sample.MessageType.PASSWORD;
+
+public class Client implements Runnable{
+    int port;
+    Socket socket;
+    private static ObjectOutputStream out;
+    private InputStream is;
+    private ObjectInputStream in;
+    private OutputStream os;
+    private String password;
+    private String category;
+    Messages message;
+    static Game newGame;
+    Client(int port){
+        this.port=port;
+    }
+
+    public Messages getMessage()
     {
-        try{
-            //1. creating a socket to connect to the server
-            requestSocket = new Socket("localhost", 2004);
-            System.out.println("Connected to localhost in port 2004");
-            //2. get Input and Output streams
-            out = new ObjectOutputStream(requestSocket.getOutputStream());
+        return message;
+    }
+
+    public void run() {
+        try {
+            socket = new Socket("localhost", 2004);
+            os = socket.getOutputStream();
+            out = new ObjectOutputStream(os);
             out.flush();
-            in = new ObjectInputStream(requestSocket.getInputStream());
-           // Auto audi = new Auto(123);
-            //System.out.println(audi.getVim());
-            //sendMessage(audi);
-            //sendMessage(0);
-            //3: Communicating with the server
-            do{
+            is = socket.getInputStream();
+            in = new ObjectInputStream(is);
+        } catch (IOException e) {
+
+        }
+
+        try {
+            connect();
+            while(socket.isConnected())
+            {
+                message = (Messages) in.readObject();
+                if(message!=null)
+                {
+
+                    switch (message.getType()) {
+                        case PASSWORD:
+                            System.out.println(message.getMsg());
+                            this.password=message.getMsg();
+                            break;
+                        case CATEGORY:
+                            System.out.println(message.getMsg());
+                            this.password=message.getMsg();
+                            break;
+                        case NOTIFICATION:
+                            System.out.println("bozia dala"+message.getMsg());
+                            break;
+
+                        case CONNECTED:
+                        System.out.println("Cennected to server");
+                            break;
+                    }
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+        public static void connect() throws IOException {
+        Messages createMessage = new Messages();
+        createMessage.setType(CONNECTED);
+        createMessage.setMsg("Connected");
+        out.writeObject(createMessage);
+    }
+           /* do{
                 try{
-                    message = (Integer)in.readObject();
-                    System.out.println("server>" + message);
+                    message = (Messages) in.readObject();
+                    if(message.getType()==MessageType.PASSWORD)
+                        newGame = new Game(message.getMsg());
+                    System.out.println("server>" + message.getMsg());
                     //sendMessage(message);
                 }
                 catch(ClassNotFoundException classNot){
                     System.err.println("data received in unknown format");
                 }
-            }while(message!=1);
+            }while(in.available()!=0);
         }
         catch(UnknownHostException unknownHost){
             System.err.println("You are trying to connect to an unknown host!");
@@ -53,8 +109,8 @@ public class Client{
                 ioException.printStackTrace();
             }
         }
-    }
-    void sendMessage(int msg)
+    }*/
+   /* void sendMessage(int msg)
     {
         try{
             out.writeObject(msg);
@@ -64,17 +120,22 @@ public class Client{
         catch(IOException ioException){
             ioException.printStackTrace();
         }
-    }
-   /* private void sendMessage(Auto obkt)
+    }*/
+
+    public static void sendMessage(Messages msg) throws IOException
     {
         try{
-            out.writeObject(obkt);
+            Messages newMessage = new Messages();
+            newMessage.setType(msg.getType());
+            newMessage.setMsg(msg.getMsg());
+            out.writeObject(newMessage);
             out.flush();
-            System.out.println("client>" + obkt.getVim());
+           // System.out.println("client>" + msg.getMsg());
         }
         catch(IOException ioException){
             ioException.printStackTrace();
         }
-    }*/
+    }
+
 }
 
