@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane fx:id="pan" prefHeight="600.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="KoloFortuny.sample.Controller">
-            <FlowPane fx:id="Gpane" hgap="50" layoutX="450" layoutY="50" minWidth="700" vgap="7" />
+            <FlowPane fx:id="Kategorie" minWidth = "700" layoutX = "450" layoutY = "10" hgap = "50" vgap = "7" ></FlowPane>
+            <FlowPane fx:id="Gpane" hgap="50" layoutX="450" layoutY="70" minWidth="700" vgap="7" />
             <GridPane layoutX="14.0" layoutY="402.0" maxWidth="707.0" prefHeight="183.0" prefWidth="386.0">
                 <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="10.0" />

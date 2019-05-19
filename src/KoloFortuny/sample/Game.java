@@ -7,13 +7,14 @@ import java.util.List;
 
 class Game {
     private String word;
+    private String category;
     private StringBuilder hiddenWord;
     private int wordLength;
     List<Field> labels = new ArrayList<>();
     List<FlowPane> words = new ArrayList<>();
     private int wordsCounter=0;
-    Game(String entry) {
-
+    Game(String entry,String category) {
+        this.category=category;
         word = entry.toUpperCase();
         wordLength = word.length();
         hideWord();
@@ -70,5 +71,11 @@ class Game {
     {
         return wordsCounter;
     }
+
+    public String getCategory()
+    {
+        return category;
+    }
+
 
 }

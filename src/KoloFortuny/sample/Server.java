@@ -9,9 +9,9 @@ public class Server {
    private static String[][] hasla = {{"Ala ma", "Powiedzenia"}, {"Krol Karol kupil krolowej Karolinie korale koloru koralowego", "aaa"}, {"Stol z powylamywanymi nogami", "bbb"}};
    private static final int generatedNumber = randomValue();
    private static String password;
-   private static String passwordCompleted;
+   private static StringBuilder passwordCompleted = new StringBuilder();
    private static String category;
-
+   private static int length;
     // Socket connection = null;
     //  ServerSocket providerSocket;
     //  ObjectOutputStream out;
@@ -32,7 +32,6 @@ public class Server {
         ServerSocket listener = new ServerSocket(PORT);
 
         try {
-            System.out.println("Server ON");
             while (true) {
                 new Handler(listener.accept()).start();
             }
@@ -71,8 +70,18 @@ public class Server {
                     Messages inputmsg = (Messages) in.readObject();
                     if (inputmsg != null) {
                         switch (inputmsg.getType()) {
-                            case PASSWORD:
-                                sendMessage(inputmsg);
+                            case SIGN:
+                                Thread t = Thread.currentThread();
+                                System.out.println("Server"+t);
+                                System.out.println(inputmsg.getMsg());
+                                checkSign(inputmsg.getMsg());
+                                String msg = new String(passwordCompleted);
+                                System.out.println(passwordCompleted);
+                                Messages Pass = new Messages();
+                                Pass.setMsg(msg);
+                                Pass.setType(MessageType.PASSWORD);
+                                sendMessage(Pass);
+                                out.flush();
                                 break;
                             case CATEGORY:
                                 sendMessage(inputmsg);
@@ -83,6 +92,7 @@ public class Server {
 
                                 StartWord.setType(MessageType.PASSWORD);
                                 password=randomWord();
+                                hideWord();
                                 StartWord.setMsg(password);
                                 System.out.println(StartWord.getMsg());
                                 category=randomCategory();
@@ -90,7 +100,6 @@ public class Server {
                                 StartCategory.setType(MessageType.CATEGORY);
                                 sendMessage(StartWord);
                                 sendMessage(StartCategory);
-                              //  newGame = new Game(randomWord());
 
                                 break;
                             case NOTIFICATION:
@@ -123,7 +132,6 @@ public class Server {
             try{
                 out.writeObject(msg);
                 out.flush();
-               // System.out.println("server>" + msg.getMsg());
             }
             catch(IOException ioException){
                 ioException.printStackTrace();
@@ -140,12 +148,40 @@ public class Server {
 
         String randomWord()
         {
-            return hasla[generatedNumber][0];
+            return hasla[generatedNumber][0].toUpperCase();
         }
 
         String randomCategory()
         {
-            return hasla[generatedNumber][1];
+            return hasla[generatedNumber][1].toUpperCase();
+        }
+
+        void checkSign(String sign) {
+            int countSigns=0;
+            for (int i = 0; i < length; i++) {
+                char ClickedSign;
+                ClickedSign = sign.charAt(0);
+                char CurrSign = password.charAt(i);
+                if (CurrSign == ClickedSign) {
+                    countSigns++;
+                    setHiddenWord(i, ClickedSign);
+                }
+            }
+        }
+
+        private void hideWord() {
+            length=password.length();
+            passwordCompleted = new StringBuilder(password);
+            for (int i = 0; i < length; i++)
+                if (password.charAt(i) == ' ')
+                    passwordCompleted.setCharAt(i, '_');
+                else
+                    passwordCompleted.setCharAt(i, '#');
+        //System.out.println(passwordCompleted);
+        }
+
+        void setHiddenWord(int i, char ClickedSign) {
+            passwordCompleted.setCharAt(i, ClickedSign);
         }
 
     }
